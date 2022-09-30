@@ -1,31 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Accelerometer Demo</title>
-    <script>
-    var ws = new WebSocket("ws://10.1.0.121:6123");
-    
-function getAccel(){
-    DeviceMotionEvent.requestPermission().then(response => {
-        if (response == 'granted') {
-        
-        // Add a listener to get smartphone acceleration 
-            // in the XYZ axes (units in m/s^2)
-            window.addEventListener('devicemotion', (event) => {
-                ws.send(event);
-            });
-       // Add a listener to get smartphone orientation 
-           // in the alpha-beta-gamma axes (units in degrees)
-            window.addEventListener('deviceorientation',(event) => {
-                ws.send(event);
-            });
-        }
-    });
-}
-    </script>
-    </head>
-    <body style="background-color:lightblue;">
-        <button id="accelPermsButton"  style="height:50px;" onclick="getAccel()"><h1>Get Accelerometer Permissions</h1></button>
-    </body>
+<!DOCTYPE HTML>
+
+<html>
+   <head>
+      
+      <script type = "text/javascript">
+         function WebSocketTest() {
+            
+            if ("WebSocket" in window) {
+               alert("WebSocket is supported by your Browser!");
+               
+               // Let us open a web socket
+               var ws = new WebSocket("ws://10.1.0.121:6123");
+				
+               ws.onopen = function() {
+                  
+                  // Web Socket is connected, send data using send()
+                  ws.send("Message to send");
+                  alert("Message is sent...");
+               };
+				
+               ws.onmessage = function (evt) { 
+                  var received_msg = evt.data;
+                  alert("Message is received...");
+               };
+				
+               ws.onclose = function() { 
+                  
+                  // websocket is closed.
+                  alert("Connection is closed..."); 
+               };
+            } else {
+              
+               // The browser doesn't support WebSocket
+               alert("WebSocket NOT supported by your Browser!");
+            }
+         }
+      </script>
+		
+   </head>
+   
+   <body>
+      <div id = "sse">
+         <a href = "javascript:WebSocketTest()">Run WebSocket</a>
+      </div>
+      
+   </body>
 </html>
